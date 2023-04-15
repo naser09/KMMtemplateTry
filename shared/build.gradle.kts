@@ -33,6 +33,8 @@ kotlin {
                 implementation(compose.material)
                 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
                 implementation(compose.components.resources)
+
+                api("moe.tlaster:precompose:1.3.15")
             }
         }
         val androidMain by getting {

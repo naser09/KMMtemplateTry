@@ -2,6 +2,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
@@ -18,6 +19,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import moe.tlaster.precompose.navigation.NavHost
+import moe.tlaster.precompose.navigation.path
+import moe.tlaster.precompose.navigation.rememberNavigator
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
@@ -28,39 +32,39 @@ fun App() {
         var greetingText by remember { mutableStateOf("Hello, World!") }
         var showImage by remember { mutableStateOf(false) }
         var text by remember { mutableStateOf("") }
-        
-        Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-            Button(onClick = {
-                greetingText = "Hello, ${getPlatformName()}"
-                showImage = !showImage
-            }) {
-                Text(greetingText)
-            }
-            Button(onClick = {
+        val navigator = rememberNavigator()
 
-            }) {
-                Text("navigate")
+        NavHost(modifier = Modifier.fillMaxSize(), navigator = navigator, initialRoute = "home"){
+            scene("home"){
+                HomeScreen(navigator)
             }
-            TextField(
-                value = text,
-                onValueChange = {
-                    text = it
-                }, modifier = Modifier.fillMaxWidth().height(50.dp)
-            )
-            AnimatedVisibility(showImage) {
-                Image(
-                    painterResource("compose-multiplatform.xml"),
-                    null
-                )
-            }
-            LazyColumn {
-                items(100){
-                    Box(Modifier.fillMaxWidth().height(30.dp), contentAlignment = Alignment.Center){
-                        Text("box no.$it")
-                    }
+            scene(route = "/greeting/{name}"){
+                it.path<String>("name")?.let{
+                    SecondScsreen(it,navigator)
                 }
             }
         }
+
+//        Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+//            Button(onClick = {
+//                greetingText = "Hello, ${getPlatformName()}"
+//                showImage = !showImage
+//            }) {
+//                Text(greetingText)
+//            }
+//            Button(onClick = {
+//
+//            }) {
+//                Text("navigate")
+//            }
+//
+//            AnimatedVisibility(showImage) {
+//                Image(
+//                    painterResource("compose-multiplatform.xml"),
+//                    null
+//                )
+//            }
+//        }
     }
 }
 
